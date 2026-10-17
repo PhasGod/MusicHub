@@ -8,7 +8,6 @@ import {
   Library,
   PlusSquare,
   Heart,
-  Disc3,
   Music2,
   ListMusic,
   Lock
@@ -65,9 +64,11 @@ export default function Sidebar() {
     <aside className="w-64 bg-zinc-950 flex flex-col h-[calc(100vh-80px)] border-r border-zinc-900 select-none flex-shrink-0">
       {/* Logo Thương hiệu */}
       <Link to="/" className="p-6 flex items-center gap-3 group">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
-          <Disc3 className="w-5 h-5 text-black animate-spin" style={{ animationDuration: '6s' }} />
-        </div>
+        <img
+          src="/favicon.png"
+          alt="MusicHub Logo"
+          className="w-9 h-9 rounded-xl object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition"
+        />
         <span className="text-xl font-bold bg-gradient-to-r from-white via-zinc-200 to-emerald-400 bg-clip-text text-transparent tracking-tight">
           MusicHub
         </span>
