@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
@@ -15,19 +15,24 @@ import SongDetail from './pages/SongDetail';
 import ArtistDetail from './pages/ArtistDetail';
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <BrowserRouter>
       <AuthProvider>
         <MusicProvider>
           <div className="flex flex-col h-screen w-screen overflow-hidden bg-black text-white font-sans select-none">
-            {/* Khu vực chính: Sidebar bên trái và Nội dung cuộn ở giữa */}
-            <div className="flex flex-1 h-[calc(100vh-80px)] overflow-hidden">
-              <Sidebar />
+            {/* Khu vực chính: Sidebar và Nội dung cuộn */}
+            <div className="flex flex-1 h-[calc(100vh-80px)] overflow-hidden w-full relative">
+              <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+              />
 
-              {/* Vùng nội dung chính */}
-              <div className="flex-1 flex flex-col h-full overflow-hidden bg-gradient-to-b from-zinc-900/80 via-zinc-950 to-black">
-                {/* Header cố định trên đỉnh của khung nội dung */}
-                <Header />
+              {/* Vùng nội dung chính - chiếm full width trên mobile */}
+              <div className="flex-1 flex flex-col h-full overflow-hidden w-full min-w-0 bg-gradient-to-b from-zinc-900/80 via-zinc-950 to-black">
+                {/* Header với nút toggle menu mobile */}
+                <Header onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
 
                 {/* Vùng nội dung cuộn thay đổi theo Router */}
                 <main className="flex-1 overflow-y-auto">

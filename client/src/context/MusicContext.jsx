@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { AlertCircle, X } from 'lucide-react';
 
 const MusicContext = createContext(null);
@@ -79,7 +80,7 @@ export const MusicProvider = ({ children }) => {
     if (!finalStreamUrl || finalStreamUrl.trim() === '') {
       try {
         console.log(`[MusicHub] Đang lấy link stream từ backend cho bài hát: "${normalized.title}" (ID: ${songId})...`);
-        const res = await axios.get(`http://localhost:5000/api/music/song/${songId}`, {
+        const res = await axios.get(`${API_BASE_URL}/api/music/song/${songId}`, {
           timeout: 6000
         });
 

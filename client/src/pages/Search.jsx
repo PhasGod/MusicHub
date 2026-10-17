@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from '../components/AddToPlaylistButton';
 import { Search as SearchIcon, X, Play, Pause, Clock, Music, Sparkles } from 'lucide-react';
@@ -33,7 +34,7 @@ export default function Search() {
     try {
       setLoading(true);
       setHasSearched(true);
-      const res = await axios.get(`http://localhost:5000/api/music/search`, {
+      const res = await axios.get(`${API_BASE_URL}/api/music/search`, {
         params: { q: term.trim(), limit: 25 }
       });
       if (res.data && res.data.data) {
@@ -72,7 +73,7 @@ export default function Search() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Ô Nhập Tìm Kiếm */}
       <div className="max-w-2xl mb-8">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-4 tracking-tight text-white flex items-center gap-2">

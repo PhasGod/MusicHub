@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from '../components/AddToPlaylistButton';
 import {
@@ -37,7 +38,7 @@ export default function ArtistDetail() {
       try {
         setLoading(true);
         setError(null);
-        const res = await axios.get(`http://localhost:5000/api/music/artist/${encodeURIComponent(name)}`);
+        const res = await axios.get(`${API_BASE_URL}/api/music/artist/${encodeURIComponent(name)}`);
         if (res.data?.data) {
           setArtist(res.data.data);
         } else {
@@ -95,7 +96,7 @@ export default function ArtistDetail() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Nút Quay lại */}
       <button
         onClick={() => navigate(-1)}

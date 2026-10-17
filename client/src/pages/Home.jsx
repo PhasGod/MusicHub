@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from '../components/AddToPlaylistButton';
 import { Play, Pause, Flame, Clock, Music, AlertCircle, Sparkles } from 'lucide-react';
@@ -30,7 +31,7 @@ export default function Home() {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get(`http://localhost:5000/api/music/chart`, {
+      const res = await axios.get(`${API_BASE_URL}/api/music/chart`, {
         params: {
           country: countryCode,
           limit: 24
@@ -64,7 +65,7 @@ export default function Home() {
   const currentTabInfo = COUNTRY_TABS.find((t) => t.id === activeCountry);
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Banner Khám Phá Nổi Bật */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/80 via-zinc-900 to-zinc-950 p-6 md:p-8 mb-8 border border-zinc-800/80 shadow-2xl">
         <div className="relative z-10 max-w-xl">

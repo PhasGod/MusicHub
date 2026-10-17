@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import {
@@ -31,7 +32,7 @@ export default function Library() {
 
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/playlists', {
+      const res = await axios.get(`${API_BASE_URL}/api/playlists`, {
         headers: { Authorization: `Bearer ${currentToken}` }
       });
 
@@ -69,7 +70,7 @@ export default function Library() {
     try {
       setIsSubmitting(true);
       const res = await axios.post(
-        'http://localhost:5000/api/playlists',
+        `${API_BASE_URL}/api/playlists`,
         {
           name: newPlaylistName.trim(),
           description: newPlaylistDesc.trim(),
@@ -100,7 +101,7 @@ export default function Library() {
     if (!window.confirm('Bạn có chắc chắn muốn xóa playlist này?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/playlists/${playlistId}`, {
+      await axios.delete(`${API_BASE_URL}/api/playlists/${playlistId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPlaylists(playlists.filter((p) => p._id !== playlistId));
@@ -142,7 +143,7 @@ export default function Library() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

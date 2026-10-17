@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import { Plus, Check, Loader2, Music2, FolderPlus } from 'lucide-react';
@@ -46,7 +47,7 @@ export default function AddToPlaylistButton({ song, className = '', dropdownPosi
     setIsOpen(true);
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/playlists', {
+      const res = await axios.get(`${API_BASE_URL}/api/playlists`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data?.data) {
@@ -66,7 +67,7 @@ export default function AddToPlaylistButton({ song, className = '', dropdownPosi
     try {
       setAddingId(playlist._id);
       await axios.post(
-        `http://localhost:5000/api/playlists/${playlist._id}/songs`,
+        `${API_BASE_URL}/api/playlists/${playlist._id}/songs`,
         {
           songId: String(song.songId || song.id),
           title: song.title,

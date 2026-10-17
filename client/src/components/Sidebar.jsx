@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import {
   Home,
@@ -10,10 +11,11 @@ import {
   Heart,
   Music2,
   ListMusic,
-  Lock
+  Lock,
+  X
 } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { user, token, openLoginModal } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(false);
@@ -27,7 +29,7 @@ export default function Sidebar() {
 
     try {
       setLoadingPlaylists(true);
-      const res = await axios.get('http://localhost:5000/api/playlists', {
+      const res = await axios.get(`${API_BASE_URL}/api/playlists`, {
         headers: { Authorization: `Bearer ${currentToken}` }
       });
       if (res.data && res.data.data) {
@@ -61,18 +63,40 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-zinc-950 flex flex-col h-[calc(100vh-80px)] border-r border-zinc-900 select-none flex-shrink-0">
-      {/* Logo Thương hiệu */}
-      <Link to="/" className="p-6 flex items-center gap-3 group">
-        <img
-          src="/favicon.png"
-          alt="MusicHub Logo"
-          className="w-9 h-9 rounded-xl object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition"
+    <>
+      {/* Lớp phủ Backdrop khi mở drawer trên Mobile */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 md:hidden transition-opacity"
         />
-        <span className="text-xl font-bold bg-gradient-to-r from-white via-zinc-200 to-emerald-400 bg-clip-text text-transparent tracking-tight">
-          MusicHub
-        </span>
-      </Link>
+      )}
+
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 w-72 md:w-64 bg-zinc-950 flex flex-col h-full md:h-[calc(100vh-80px)] border-r border-zinc-900 select-none flex-shrink-0 transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        {/* Logo Thương hiệu & Nút Đóng trên mobile */}
+        <div className="p-5 md:p-6 flex items-center justify-between border-b border-zinc-900/40 md:border-b-0">
+          <Link to="/" onClick={onClose} className="flex items-center gap-3 group">
+            <img
+              src="/favicon.png"
+              alt="MusicHub Logo"
+              className="w-8 h-8 md:w-9 md:h-9 rounded-xl object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition"
+            />
+            <span className="text-xl font-bold bg-gradient-to-r from-white via-zinc-200 to-emerald-400 bg-clip-text text-transparent tracking-tight">
+              MusicHub
+            </span>
+          </Link>
+          <button
+            onClick={onClose}
+            className="md:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850"
+            title="Đóng menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
 
       {/* Menu Điều Hướng Chính bằng NavLink */}
       <nav className="px-3 space-y-1">
@@ -83,6 +107,7 @@ export default function Sidebar() {
               key={item.to}
               to={item.to}
               end={item.end}
+              onClick={onClose}
               className={({ isActive }) =>
                 `w-full flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   isActive
@@ -107,6 +132,7 @@ export default function Sidebar() {
         {user ? (
           <NavLink
             to="/library"
+            onClick={onClose}
             className={({ isActive }) =>
               `w-full flex items-center gap-4 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
@@ -122,7 +148,10 @@ export default function Sidebar() {
           </NavLink>
         ) : (
           <button
-            onClick={openLoginModal}
+            onClick={() => {
+              onClose();
+              openLoginModal();
+            }}
             className="w-full flex items-center gap-4 px-4 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900/60 transition group text-left"
           >
             <div className="w-6 h-6 rounded bg-zinc-800 group-hover:bg-zinc-700 flex items-center justify-center text-zinc-300">
@@ -134,6 +163,7 @@ export default function Sidebar() {
 
         <NavLink
           to="/favorites"
+          onClick={onClose}
           className={({ isActive }) =>
             `w-full flex items-center gap-4 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               isActive
@@ -168,6 +198,7 @@ export default function Sidebar() {
               <Link
                 key={playlist._id}
                 to={`/playlist/${playlist._id}`}
+                onClick={onClose}
                 className="w-full text-left px-2 py-2 rounded text-zinc-400 hover:text-white hover:bg-zinc-900/60 text-xs truncate transition flex items-center gap-2 block group"
                 title={playlist.name}
               >
@@ -196,5 +227,6 @@ export default function Sidebar() {
         )}
       </div>
     </aside>
-  );
+  </>
+);
 }

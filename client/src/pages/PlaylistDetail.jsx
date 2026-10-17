@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import {
@@ -40,7 +41,7 @@ export default function PlaylistDetail() {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get(`http://localhost:5000/api/playlists/${id}`, {
+      const res = await axios.get(`${API_BASE_URL}/api/playlists/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -70,7 +71,7 @@ export default function PlaylistDetail() {
 
     try {
       setDeleting(true);
-      await axios.delete(`http://localhost:5000/api/playlists/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/playlists/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -89,7 +90,7 @@ export default function PlaylistDetail() {
     e.stopPropagation();
 
     try {
-      await axios.delete(`http://localhost:5000/api/playlists/${id}/songs/${songId}`, {
+      await axios.delete(`${API_BASE_URL}/api/playlists/${id}/songs/${songId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -164,7 +165,7 @@ export default function PlaylistDetail() {
   const songs = playlist.songs || [];
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Nút quay lại */}
       <button
         onClick={() => navigate(-1)}

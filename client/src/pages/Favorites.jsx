@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from '../components/AddToPlaylistButton';
@@ -25,7 +26,7 @@ export default function Favorites() {
 
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/favorites', {
+      const res = await axios.get(`${API_BASE_URL}/api/favorites`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -52,7 +53,7 @@ export default function Favorites() {
     if (!token) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/favorites/${songId}`, {
+      await axios.delete(`${API_BASE_URL}/api/favorites/${songId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFavorites((prev) => prev.filter((item) => (item.songId || item.id) !== songId));
@@ -93,7 +94,7 @@ export default function Favorites() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Header Banner Bài hát đã thích */}
       <div className="flex flex-col md:flex-row items-start md:items-end gap-6 p-6 md:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/80 via-purple-950/60 to-zinc-950 border border-indigo-800/40 mb-8 shadow-2xl">
         <div className="w-36 h-36 md:w-44 md:h-44 rounded-xl bg-gradient-to-br from-indigo-600 to-pink-500 flex items-center justify-center shadow-2xl flex-shrink-0">

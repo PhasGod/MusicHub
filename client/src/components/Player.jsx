@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from './AddToPlaylistButton';
@@ -59,7 +60,7 @@ export default function Player() {
       if (!sId) return;
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/favorites/check/${sId}`, {
+        const res = await axios.get(`${API_BASE_URL}/api/favorites/check/${sId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setIsLiked(Boolean(res.data?.isFavorite));
@@ -81,13 +82,13 @@ export default function Player() {
     const sId = currentSong.songId || currentSong.id;
     try {
       if (isLiked) {
-        await axios.delete(`http://localhost:5000/api/favorites/${sId}`, {
+        await axios.delete(`${API_BASE_URL}/api/favorites/${sId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setIsLiked(false);
       } else {
         await axios.post(
-          'http://localhost:5000/api/favorites',
+          `${API_BASE_URL}/api/favorites`,
           {
             songId: String(sId),
             title: currentSong.title,
@@ -111,9 +112,9 @@ export default function Player() {
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 h-20 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800/80 px-4 md:px-6 flex items-center justify-between z-50 text-white select-none">
+    <footer className="fixed bottom-0 left-0 right-0 h-20 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800/80 px-2.5 sm:px-4 md:px-6 flex items-center justify-between z-50 text-white select-none gap-2">
       {/* Cụm bên trái: Thumbnail, Tiêu đề, Ca sĩ, Nút Thích & Thêm vào Playlist */}
-      <div className="flex items-center gap-2.5 w-1/4 min-w-[200px] max-w-[32%] flex-shrink-0">
+      <div className="flex items-center gap-2 md:gap-2.5 flex-1 md:flex-initial md:w-1/4 min-w-0 max-w-[50%] sm:max-w-[42%] md:max-w-[32%] flex-shrink-0">
         {currentSong ? (
           <>
             <Link
@@ -123,7 +124,7 @@ export default function Player() {
               <img
                 src={currentSong.thumbnail}
                 alt={currentSong.title}
-                className="w-14 h-14 min-w-[3.5rem] rounded-md object-cover flex-shrink-0 shadow-md group-hover:opacity-80 transition"
+                className="w-11 h-11 min-w-[2.75rem] md:w-14 md:h-14 md:min-w-[3.5rem] rounded-md object-cover flex-shrink-0 shadow-md group-hover:opacity-80 transition"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=150&q=80';
                 }}
@@ -132,14 +133,14 @@ export default function Player() {
             <div className="flex flex-col min-w-0 overflow-hidden flex-1">
               <Link
                 to={`/song/${currentSong.songId || currentSong.id}`}
-                className="text-sm font-medium text-zinc-100 truncate hover:underline hover:text-white cursor-pointer"
+                className="text-xs md:text-sm font-medium text-zinc-100 truncate hover:underline hover:text-white cursor-pointer"
                 title={currentSong.title}
               >
                 {currentSong.title}
               </Link>
               <Link
                 to={`/artist/${encodeURIComponent(currentSong.artists || currentSong.artist)}`}
-                className="text-xs text-zinc-400 truncate hover:text-emerald-400 hover:underline cursor-pointer"
+                className="text-[11px] md:text-xs text-zinc-400 truncate hover:text-emerald-400 hover:underline cursor-pointer"
                 title={currentSong.artists || currentSong.artist}
               >
                 {currentSong.artists || currentSong.artist}
@@ -149,10 +150,10 @@ export default function Player() {
               <button
                 onClick={handleToggleFavorite}
                 title={isLiked ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
-                className="p-1.5 rounded-full text-zinc-400 hover:text-white transition active:scale-90"
+                className="p-1 md:p-1.5 rounded-full text-zinc-400 hover:text-white transition active:scale-90"
               >
                 <Heart
-                  size={18}
+                  size={16}
                   className={isLiked ? 'fill-emerald-500 text-emerald-500' : 'hover:text-emerald-400'}
                 />
               </button>
@@ -160,52 +161,52 @@ export default function Player() {
             </div>
           </>
         ) : (
-          <div className="flex items-center gap-3 text-zinc-500 overflow-hidden">
-            <div className="w-14 h-14 min-w-[3.5rem] rounded-md bg-zinc-900 border border-zinc-800/60 flex items-center justify-center flex-shrink-0">
-              <Music size={20} className="text-zinc-600" />
+          <div className="flex items-center gap-2.5 text-zinc-500 overflow-hidden">
+            <div className="w-11 h-11 min-w-[2.75rem] md:w-14 md:h-14 md:min-w-[3.5rem] rounded-md bg-zinc-900 border border-zinc-800/60 flex items-center justify-center flex-shrink-0">
+              <Music size={18} className="text-zinc-600" />
             </div>
             <div className="flex flex-col min-w-0 overflow-hidden">
-              <span className="text-xs font-medium text-zinc-400 truncate">Chưa chọn bài hát</span>
-              <span className="text-[11px] text-zinc-600 truncate">Chọn bài từ danh sách</span>
+              <span className="text-xs font-medium text-zinc-400 truncate">Chưa chọn bài</span>
+              <span className="text-[10px] md:text-[11px] text-zinc-600 truncate">Chọn bài từ danh sách</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Cụm ở giữa: Điều khiển Play/Pause, Next, Prev, Shuffle, Repeat & Thanh Seek Bar */}
-      <div className="flex flex-col items-center justify-center w-2/4 max-w-2xl px-2">
+      <div className="flex flex-col items-center justify-center flex-1 max-w-2xl px-1 sm:px-2">
         {/* Nút điều khiển */}
-        <div className="flex items-center gap-4 md:gap-6 mb-1.5">
-          {/* Nút Shuffle */}
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-6 mb-1">
+          {/* Nút Shuffle (ẩn trên mobile hẹp) */}
           <button
             onClick={toggleShuffle}
             title={isShuffle ? 'Tắt phát ngẫu nhiên' : 'Bật phát ngẫu nhiên'}
-            className={`p-1 transition ${
+            className={`p-1 transition hidden sm:inline-flex ${
               isShuffle ? 'text-emerald-400' : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <Shuffle size={16} />
+            <Shuffle size={15} />
           </button>
 
           {/* Nút Previous */}
           <button
             onClick={prevSong}
             title="Bài trước đó"
-            className="text-zinc-300 hover:text-white transition active:scale-90"
+            className="text-zinc-300 hover:text-white transition active:scale-90 p-1"
           >
-            <SkipBack size={20} className="fill-current" />
+            <SkipBack size={18} className="fill-current" />
           </button>
 
           {/* Nút Play / Pause */}
           <button
             onClick={togglePlay}
             title={isPlaying ? 'Tạm dừng' : 'Phát'}
-            className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 shadow-md transition"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 shadow-md transition"
           >
             {isPlaying ? (
-              <Pause size={18} className="fill-black" />
+              <Pause size={16} className="fill-black" />
             ) : (
-              <Play size={18} className="fill-black ml-0.5" />
+              <Play size={16} className="fill-black ml-0.5" />
             )}
           </button>
 
@@ -213,26 +214,26 @@ export default function Player() {
           <button
             onClick={nextSong}
             title="Bài tiếp theo"
-            className="text-zinc-300 hover:text-white transition active:scale-90"
+            className="text-zinc-300 hover:text-white transition active:scale-90 p-1"
           >
-            <SkipForward size={20} className="fill-current" />
+            <SkipForward size={18} className="fill-current" />
           </button>
 
-          {/* Nút Repeat */}
+          {/* Nút Repeat (ẩn trên mobile hẹp) */}
           <button
             onClick={toggleRepeat}
             title={isRepeat ? 'Tắt lặp lại' : 'Lặp lại bài hát'}
-            className={`p-1 transition ${
+            className={`p-1 transition hidden sm:inline-flex ${
               isRepeat ? 'text-emerald-400' : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <Repeat size={16} />
+            <Repeat size={15} />
           </button>
         </div>
 
         {/* Thanh Seek bar & Thời gian */}
-        <div className="w-full flex items-center gap-2 text-[11px] text-zinc-400 font-mono">
-          <span className="w-9 text-right">{formatTime(currentTime)}</span>
+        <div className="w-full flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-zinc-400 font-mono">
+          <span className="w-7 sm:w-9 text-right">{formatTime(currentTime)}</span>
           <div className="relative flex-1 flex items-center group h-4 cursor-pointer">
             <input
               type="range"
@@ -252,12 +253,12 @@ export default function Player() {
               />
             </div>
           </div>
-          <span className="w-9 text-left">{formatTime(duration)}</span>
+          <span className="w-7 sm:w-9 text-left">{formatTime(duration)}</span>
         </div>
       </div>
 
-      {/* Cụm bên phải: Điều chỉnh âm lượng */}
-      <div className="flex items-center justify-end gap-2.5 w-1/4 min-w-[140px]">
+      {/* Cụm bên phải: Điều chỉnh âm lượng (ẩn trên mobile vì dùng phím vật lý của điện thoại) */}
+      <div className="hidden md:flex items-center justify-end gap-2.5 w-1/4 min-w-[140px]">
         <button
           onClick={toggleMute}
           title={isMuted ? 'Bật tiếng' : 'Tắt tiếng'}

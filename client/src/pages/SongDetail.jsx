@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useMusic } from '../context/MusicContext';
 import AddToPlaylistButton from '../components/AddToPlaylistButton';
@@ -41,7 +42,7 @@ export default function SongDetail() {
       try {
         setLoading(true);
         setError(null);
-        const res = await axios.get(`http://localhost:5000/api/music/song/${id}`);
+        const res = await axios.get(`${API_BASE_URL}/api/music/song/${id}`);
         if (res.data?.data) {
           setSong(res.data.data);
         } else {
@@ -66,7 +67,7 @@ export default function SongDetail() {
         return;
       }
       try {
-        const res = await axios.get(`http://localhost:5000/api/favorites/check/${id}`, {
+        const res = await axios.get(`${API_BASE_URL}/api/favorites/check/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setIsLiked(Boolean(res.data?.isFavorite));
@@ -87,14 +88,14 @@ export default function SongDetail() {
 
     try {
       if (isLiked) {
-        await axios.delete(`http://localhost:5000/api/favorites/${song.songId}`, {
+        await axios.delete(`${API_BASE_URL}/api/favorites/${song.songId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setIsLiked(false);
         showToast(`Đã xóa "${song.title}" khỏi bài hát yêu thích`, 'info');
       } else {
         await axios.post(
-          'http://localhost:5000/api/favorites',
+          `${API_BASE_URL}/api/favorites`,
           {
             songId: String(song.songId),
             title: song.title,
@@ -152,7 +153,7 @@ export default function SongDetail() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 pb-28 text-white">
+    <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-28 text-white w-full max-w-full overflow-x-hidden">
       {/* Nút Quay lại */}
       <button
         onClick={() => navigate(-1)}
